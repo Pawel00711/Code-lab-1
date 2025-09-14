@@ -1,0 +1,416 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1023pt" height="1371pt" viewBox="0.00 0.00 1023.00 1371.00">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 1367)">
+<title>VendingMachineFlowchart</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-1367 1018.68,-1367 1018.68,4 -4,4"/>
+<!-- start -->
+<g id="node1" class="node">
+<title>start</title>
+<ellipse fill="none" stroke="black" cx="663.73" cy="-1199" rx="31.43" ry="18"/>
+<text xml:space="preserve" text-anchor="middle" x="663.73" y="-1194.8" font-family="Arial" font-size="14.00">Start</text>
+</g>
+<!-- init -->
+<g id="node2" class="node">
+<title>init</title>
+<polygon fill="none" stroke="black" points="756.95,-1133 574.52,-1133 570.52,-1129 570.52,-1091.4 752.95,-1091.4 756.95,-1095.4 756.95,-1133"/>
+<polyline fill="none" stroke="black" points="752.95,-1129 570.52,-1129"/>
+<polyline fill="none" stroke="black" points="752.95,-1129 752.95,-1091.4"/>
+<polyline fill="none" stroke="black" points="752.95,-1129 756.95,-1133"/>
+<text xml:space="preserve" text-anchor="middle" x="663.73" y="-1116.4" font-family="Arial" font-size="14.00">Initialize Vending Machine</text>
+<text xml:space="preserve" text-anchor="middle" x="663.73" y="-1099.6" font-family="Arial" font-size="14.00">(Load products, load users)</text>
+</g>
+<!-- start&#45;&gt;init -->
+<g id="edge1" class="edge">
+<title>start-&gt;init</title>
+<path fill="none" stroke="black" d="M663.73,-1180.84C663.73,-1170.42 663.73,-1156.81 663.73,-1144.53"/>
+<polygon fill="black" stroke="black" points="667.23,-1144.83 663.73,-1134.83 660.23,-1144.83 667.23,-1144.83"/>
+<text xml:space="preserve" text-anchor="middle" x="694.85" y="-1154" font-family="Arial" font-size="10.00">Program Start</text>
+</g>
+<!-- user_auth -->
+<g id="node3" class="node">
+<title>user_auth</title>
+<path fill="none" stroke="black" d="M652.05,-1051.66C652.05,-1051.66 498.33,-1015.54 498.33,-1015.54 492.49,-1014.17 492.49,-1011.43 498.33,-1010.06 498.33,-1010.06 652.05,-973.94 652.05,-973.94 657.89,-972.57 669.58,-972.57 675.42,-973.94 675.42,-973.94 829.14,-1010.06 829.14,-1010.06 834.98,-1011.43 834.98,-1014.17 829.14,-1015.54 829.14,-1015.54 675.42,-1051.66 675.42,-1051.66 669.58,-1053.03 657.89,-1053.03 652.05,-1051.66"/>
+<text xml:space="preserve" text-anchor="middle" x="663.73" y="-1017" font-family="Arial" font-size="14.00">User Authentication Menu</text>
+<text xml:space="preserve" text-anchor="middle" x="663.73" y="-1000.2" font-family="Arial" font-size="14.00">(Login, Register, Guest)</text>
+</g>
+<!-- init&#45;&gt;user_auth -->
+<g id="edge2" class="edge">
+<title>init-&gt;user_auth</title>
+<path fill="none" stroke="black" d="M663.73,-1091.02C663.73,-1083.65 663.73,-1074.94 663.73,-1066.08"/>
+<polygon fill="black" stroke="black" points="667.23,-1066.36 663.73,-1056.36 660.23,-1066.36 667.23,-1066.36"/>
+</g>
+<!-- user_auth&#45;&gt;user_auth -->
+<g id="edge5" class="edge">
+<title>user_auth-&gt;user_auth</title>
+<path fill="none" stroke="black" d="M821.42,-1017.86C843.8,-1017.04 858.82,-1015.35 858.82,-1012.8 858.82,-1010.71 848.72,-1009.2 832.73,-1008.27"/>
+<polygon fill="black" stroke="black" points="833.08,-1004.78 822.93,-1007.81 832.76,-1011.77 833.08,-1004.78"/>
+<text xml:space="preserve" text-anchor="middle" x="886.06" y="-1009.8" font-family="Arial" font-size="10.00">Login Failed</text>
+</g>
+<!-- user_auth&#45;&gt;user_auth -->
+<g id="edge7" class="edge">
+<title>user_auth-&gt;user_auth</title>
+<path fill="none" stroke="black" d="M795.71,-1023.91C857.4,-1024.91 913.31,-1021.21 913.31,-1012.8 913.31,-1004.92 864.17,-1001.17 807.2,-1001.56"/>
+<polygon fill="black" stroke="black" points="807.18,-998.06 797.22,-1001.67 807.26,-1005.06 807.18,-998.06"/>
+<text xml:space="preserve" text-anchor="middle" x="954.99" y="-1009.8" font-family="Arial" font-size="10.00">Registration Failed</text>
+</g>
+<!-- main_menu -->
+<g id="node4" class="node">
+<title>main_menu</title>
+<path fill="none" stroke="black" d="M677.36,-861.2C677.36,-861.2 616.11,-861.2 616.11,-861.2 610.11,-861.2 604.11,-855.2 604.11,-849.2 604.11,-849.2 604.11,-837.2 604.11,-837.2 604.11,-831.2 610.11,-825.2 616.11,-825.2 616.11,-825.2 677.36,-825.2 677.36,-825.2 683.36,-825.2 689.36,-831.2 689.36,-837.2 689.36,-837.2 689.36,-849.2 689.36,-849.2 689.36,-855.2 683.36,-861.2 677.36,-861.2"/>
+<text xml:space="preserve" text-anchor="middle" x="646.73" y="-839" font-family="Arial" font-size="14.00">Main Menu</text>
+</g>
+<!-- user_auth&#45;&gt;main_menu -->
+<g id="edge3" class="edge">
+<title>user_auth-&gt;main_menu</title>
+<path fill="none" stroke="black" d="M659.13,-971.94C657.77,-959.83 656.31,-946.47 655.05,-934.2 652.96,-913.65 650.82,-890.44 649.23,-872.74"/>
+<polygon fill="black" stroke="black" points="652.74,-872.62 648.36,-862.97 645.76,-873.24 652.74,-872.62"/>
+<text xml:space="preserve" text-anchor="middle" x="668.39" y="-913.2" font-family="Arial" font-size="10.00">Guest</text>
+</g>
+<!-- user_auth&#45;&gt;main_menu -->
+<g id="edge4" class="edge">
+<title>user_auth-&gt;main_menu</title>
+<path fill="none" stroke="black" d="M564.44,-994.09C501.4,-980.59 428.21,-959.96 409.13,-934.2 399.61,-921.34 399.15,-910.7 409.13,-898.2 412.04,-894.56 523.49,-870.35 592.7,-855.61"/>
+<polygon fill="black" stroke="black" points="593.31,-859.06 602.36,-853.56 591.85,-852.21 593.31,-859.06"/>
+<text xml:space="preserve" text-anchor="middle" x="446.93" y="-913.2" font-family="Arial" font-size="10.00">Login Successful</text>
+</g>
+<!-- user_auth&#45;&gt;main_menu -->
+<g id="edge6" class="edge">
+<title>user_auth-&gt;main_menu</title>
+<path fill="none" stroke="black" d="M599.21,-985.89C577.42,-973.66 555.51,-956.7 543.24,-934.2 535.58,-920.15 534.95,-911.88 543.24,-898.2 554.37,-879.85 573.99,-867.44 593.19,-859.2"/>
+<polygon fill="black" stroke="black" points="594.32,-862.51 602.34,-855.59 591.76,-856 594.32,-862.51"/>
+<text xml:space="preserve" text-anchor="middle" x="595.49" y="-913.2" font-family="Arial" font-size="10.00">Registration Successful</text>
+</g>
+<!-- loop_start -->
+<g id="node5" class="node">
+<title>loop_start</title>
+<ellipse fill="black" stroke="black" cx="692.73" cy="-916.2" rx="1.8" ry="1.8"/>
+</g>
+<!-- user_auth&#45;&gt;loop_start -->
+<g id="edge8" class="edge">
+<title>user_auth-&gt;loop_start</title>
+<path fill="none" stroke="black" d="M675.45,-973.6C680.4,-957.42 685.81,-939.78 689.24,-928.61"/>
+<polygon fill="black" stroke="black" points="692.47,-930 692.06,-919.41 685.78,-927.95 692.47,-930"/>
+</g>
+<!-- get_input -->
+<g id="node6" class="node">
+<title>get_input</title>
+<path fill="none" stroke="black" d="M547.25,-788.2C547.25,-788.2 464.21,-788.2 464.21,-788.2 458.21,-788.2 452.21,-782.2 452.21,-776.2 452.21,-776.2 452.21,-764.2 452.21,-764.2 452.21,-758.2 458.21,-752.2 464.21,-752.2 464.21,-752.2 547.25,-752.2 547.25,-752.2 553.25,-752.2 559.25,-758.2 559.25,-764.2 559.25,-764.2 559.25,-776.2 559.25,-776.2 559.25,-782.2 553.25,-788.2 547.25,-788.2"/>
+<text xml:space="preserve" text-anchor="middle" x="505.73" y="-766" font-family="Arial" font-size="14.00">Get User Input</text>
+</g>
+<!-- main_menu&#45;&gt;get_input -->
+<g id="edge10" class="edge">
+<title>main_menu-&gt;get_input</title>
+<path fill="none" stroke="black" d="M612.24,-824.83C593.64,-815.46 570.45,-803.79 550.47,-793.73"/>
+<polygon fill="black" stroke="black" points="552.22,-790.69 541.71,-789.32 549.07,-796.94 552.22,-790.69"/>
+</g>
+<!-- loop_start&#45;&gt;main_menu -->
+<g id="edge9" class="edge">
+<title>loop_start-&gt;main_menu</title>
+<path fill="none" stroke="black" d="M692.08,-914.2C689.01,-909.45 675.58,-888.72 664.13,-871.04"/>
+<polygon fill="black" stroke="black" points="667.24,-869.42 658.87,-862.93 661.37,-873.22 667.24,-869.42"/>
+</g>
+<!-- admin_check -->
+<g id="node7" class="node">
+<title>admin_check</title>
+<path fill="none" stroke="black" d="M420.84,-713.64C420.84,-713.64 307.65,-698.76 307.65,-698.76 301.7,-697.98 301.7,-696.42 307.65,-695.64 307.65,-695.64 420.84,-680.76 420.84,-680.76 426.79,-679.98 438.68,-679.98 444.63,-680.76 444.63,-680.76 557.82,-695.64 557.82,-695.64 563.77,-696.42 563.77,-697.98 557.82,-698.76 557.82,-698.76 444.63,-713.64 444.63,-713.64 438.68,-714.42 426.79,-714.42 420.84,-713.64"/>
+<text xml:space="preserve" text-anchor="middle" x="432.73" y="-693" font-family="Arial" font-size="14.00">Is Input 'admin123'?</text>
+</g>
+<!-- get_input&#45;&gt;admin_check -->
+<g id="edge11" class="edge">
+<title>get_input-&gt;admin_check</title>
+<path fill="none" stroke="black" d="M488.06,-752.01C478.57,-742.78 466.73,-731.27 456.45,-721.27"/>
+<polygon fill="black" stroke="black" points="458.95,-718.82 449.35,-714.36 454.07,-723.84 458.95,-718.82"/>
+</g>
+<!-- admin_menu -->
+<g id="node8" class="node">
+<title>admin_menu</title>
+<path fill="none" stroke="black" d="M376.03,-631.2C376.03,-631.2 305.44,-631.2 305.44,-631.2 299.44,-631.2 293.44,-625.2 293.44,-619.2 293.44,-619.2 293.44,-607.2 293.44,-607.2 293.44,-601.2 299.44,-595.2 305.44,-595.2 305.44,-595.2 376.03,-595.2 376.03,-595.2 382.03,-595.2 388.03,-601.2 388.03,-607.2 388.03,-607.2 388.03,-619.2 388.03,-619.2 388.03,-625.2 382.03,-631.2 376.03,-631.2"/>
+<text xml:space="preserve" text-anchor="middle" x="340.73" y="-609" font-family="Arial" font-size="14.00">Admin Menu</text>
+</g>
+<!-- admin_check&#45;&gt;admin_menu -->
+<g id="edge12" class="edge">
+<title>admin_check-&gt;admin_menu</title>
+<path fill="none" stroke="black" d="M415.86,-681.16C402.55,-669.3 383.73,-652.52 368.25,-638.72"/>
+<polygon fill="black" stroke="black" points="370.97,-636.46 361.18,-632.42 366.31,-641.69 370.97,-636.46"/>
+<text xml:space="preserve" text-anchor="middle" x="400.86" y="-652.2" font-family="Arial" font-size="10.00">Yes</text>
+</g>
+<!-- buy_watch -->
+<g id="node10" class="node">
+<title>buy_watch</title>
+<path fill="none" stroke="black" d="M263.8,-631.2C263.8,-631.2 163.67,-631.2 163.67,-631.2 157.67,-631.2 151.67,-625.2 151.67,-619.2 151.67,-619.2 151.67,-607.2 151.67,-607.2 151.67,-601.2 157.67,-595.2 163.67,-595.2 163.67,-595.2 263.8,-595.2 263.8,-595.2 269.8,-595.2 275.8,-601.2 275.8,-607.2 275.8,-607.2 275.8,-619.2 275.8,-619.2 275.8,-625.2 269.8,-631.2 263.8,-631.2"/>
+<text xml:space="preserve" text-anchor="middle" x="213.73" y="-609" font-family="Arial" font-size="14.00">Buy a Wristwatch</text>
+</g>
+<!-- admin_check&#45;&gt;buy_watch -->
+<g id="edge15" class="edge">
+<title>admin_check-&gt;buy_watch</title>
+<path fill="none" stroke="black" d="M402.58,-682.76C380.18,-672.97 348.79,-659.66 320.73,-649.2 307.87,-644.41 294.02,-639.61 280.68,-635.17"/>
+<polygon fill="black" stroke="black" points="282.15,-631.97 271.56,-632.17 279.96,-638.62 282.15,-631.97"/>
+<text xml:space="preserve" text-anchor="middle" x="355.07" y="-652.2" font-family="Arial" font-size="10.00">No</text>
+</g>
+<!-- show_offer -->
+<g id="node25" class="node">
+<title>show_offer</title>
+<path fill="none" stroke="black" d="M556.08,-631.2C556.08,-631.2 489.39,-631.2 489.39,-631.2 483.39,-631.2 477.39,-625.2 477.39,-619.2 477.39,-619.2 477.39,-607.2 477.39,-607.2 477.39,-601.2 483.39,-595.2 489.39,-595.2 489.39,-595.2 556.08,-595.2 556.08,-595.2 562.08,-595.2 568.08,-601.2 568.08,-607.2 568.08,-607.2 568.08,-619.2 568.08,-619.2 568.08,-625.2 562.08,-631.2 556.08,-631.2"/>
+<text xml:space="preserve" text-anchor="middle" x="522.73" y="-609" font-family="Arial" font-size="14.00">Watch Offer</text>
+</g>
+<!-- admin_check&#45;&gt;show_offer -->
+<g id="edge29" class="edge">
+<title>admin_check-&gt;show_offer</title>
+<path fill="none" stroke="black" d="M449.24,-681.16C462.14,-669.41 480.34,-652.83 495.4,-639.11"/>
+<polygon fill="black" stroke="black" points="497.69,-641.76 502.72,-632.43 492.97,-636.58 497.69,-641.76"/>
+<text xml:space="preserve" text-anchor="middle" x="489.51" y="-652.2" font-family="Arial" font-size="10.00">No</text>
+</g>
+<!-- view_history -->
+<g id="node26" class="node">
+<title>view_history</title>
+<path fill="none" stroke="black" d="M121.47,-631.2C121.47,-631.2 12,-631.2 12,-631.2 6,-631.2 0,-625.2 0,-619.2 0,-619.2 0,-607.2 0,-607.2 0,-601.2 6,-595.2 12,-595.2 12,-595.2 121.47,-595.2 121.47,-595.2 127.47,-595.2 133.47,-601.2 133.47,-607.2 133.47,-607.2 133.47,-619.2 133.47,-619.2 133.47,-625.2 127.47,-631.2 121.47,-631.2"/>
+<text xml:space="preserve" text-anchor="middle" x="66.73" y="-609" font-family="Arial" font-size="14.00">View Order History</text>
+</g>
+<!-- admin_check&#45;&gt;view_history -->
+<g id="edge30" class="edge">
+<title>admin_check-&gt;view_history</title>
+<path fill="none" stroke="black" d="M383.75,-685.23C322.52,-671.51 216.97,-647.86 144.61,-631.65"/>
+<polygon fill="black" stroke="black" points="145.73,-628.31 135.21,-629.54 144.2,-635.14 145.73,-628.31"/>
+<text xml:space="preserve" text-anchor="middle" x="278.04" y="-652.2" font-family="Arial" font-size="10.00">No</text>
+</g>
+<!-- redeem_points -->
+<g id="node27" class="node">
+<title>redeem_points</title>
+<path fill="none" stroke="black" d="M733.72,-631.2C733.72,-631.2 597.75,-631.2 597.75,-631.2 591.75,-631.2 585.75,-625.2 585.75,-619.2 585.75,-619.2 585.75,-607.2 585.75,-607.2 585.75,-601.2 591.75,-595.2 597.75,-595.2 597.75,-595.2 733.72,-595.2 733.72,-595.2 739.72,-595.2 745.72,-601.2 745.72,-607.2 745.72,-607.2 745.72,-619.2 745.72,-619.2 745.72,-625.2 739.72,-631.2 733.72,-631.2"/>
+<text xml:space="preserve" text-anchor="middle" x="665.73" y="-609" font-family="Arial" font-size="14.00">Redeem Loyalty Points</text>
+</g>
+<!-- admin_check&#45;&gt;redeem_points -->
+<g id="edge31" class="edge">
+<title>admin_check-&gt;redeem_points</title>
+<path fill="none" stroke="black" d="M468.88,-683.48C505.3,-670.66 562.13,-650.66 605.38,-635.44"/>
+<polygon fill="black" stroke="black" points="606.37,-638.8 614.64,-632.18 604.04,-632.2 606.37,-638.8"/>
+<text xml:space="preserve" text-anchor="middle" x="569.58" y="-652.2" font-family="Arial" font-size="10.00">No</text>
+</g>
+<!-- exit -->
+<g id="node28" class="node">
+<title>exit</title>
+<ellipse fill="none" stroke="black" cx="432.73" cy="-613.2" rx="27.13" ry="18"/>
+<text xml:space="preserve" text-anchor="middle" x="432.73" y="-609" font-family="Arial" font-size="14.00">Exit</text>
+</g>
+<!-- admin_check&#45;&gt;exit -->
+<g id="edge32" class="edge">
+<title>admin_check-&gt;exit</title>
+<path fill="none" stroke="black" d="M432.73,-678.81C432.73,-668.37 432.73,-654.84 432.73,-642.86"/>
+<polygon fill="black" stroke="black" points="436.23,-643.08 432.73,-633.08 429.23,-643.08 436.23,-643.08"/>
+<text xml:space="preserve" text-anchor="middle" x="439.13" y="-652.2" font-family="Arial" font-size="10.00">No</text>
+</g>
+<!-- admin_exit -->
+<g id="node9" class="node">
+<title>admin_exit</title>
+<ellipse fill="none" stroke="black" cx="558.73" cy="-540.2" rx="40.57" ry="18"/>
+<text xml:space="preserve" text-anchor="middle" x="558.73" y="-536" font-family="Arial" font-size="14.00">Logout</text>
+</g>
+<!-- admin_menu&#45;&gt;admin_exit -->
+<g id="edge13" class="edge">
+<title>admin_menu-&gt;admin_exit</title>
+<path fill="none" stroke="black" d="M388.31,-596.71C426.34,-584.32 479.19,-567.11 515.92,-555.15"/>
+<polygon fill="black" stroke="black" points="516.9,-558.51 525.32,-552.08 514.73,-551.85 516.9,-558.51"/>
+</g>
+<!-- admin_exit&#45;&gt;main_menu -->
+<g id="edge14" class="edge">
+<title>admin_exit-&gt;main_menu</title>
+<path fill="none" stroke="black" d="M597.67,-545.95C659.63,-554.61 773.73,-575.54 773.73,-612.2 773.73,-771.2 773.73,-771.2 773.73,-771.2 773.73,-806.76 735.34,-824.68 700.77,-833.61"/>
+<polygon fill="black" stroke="black" points="700.14,-830.16 691.2,-835.85 701.74,-836.97 700.14,-830.16"/>
+<text xml:space="preserve" text-anchor="middle" x="820.42" y="-694.2" font-family="Arial" font-size="10.00">Return to Main Menu</text>
+</g>
+<!-- select_watch -->
+<g id="node11" class="node">
+<title>select_watch</title>
+<path fill="none" stroke="black" d="M431.97,-558.2C431.97,-558.2 357.5,-558.2 357.5,-558.2 351.5,-558.2 345.5,-552.2 345.5,-546.2 345.5,-546.2 345.5,-534.2 345.5,-534.2 345.5,-528.2 351.5,-522.2 357.5,-522.2 357.5,-522.2 431.97,-522.2 431.97,-522.2 437.97,-522.2 443.97,-528.2 443.97,-534.2 443.97,-534.2 443.97,-546.2 443.97,-546.2 443.97,-552.2 437.97,-558.2 431.97,-558.2"/>
+<text xml:space="preserve" text-anchor="middle" x="394.73" y="-536" font-family="Arial" font-size="14.00">Select Watch</text>
+</g>
+<!-- buy_watch&#45;&gt;select_watch -->
+<g id="edge16" class="edge">
+<title>buy_watch-&gt;select_watch</title>
+<path fill="none" stroke="black" d="M258.01,-594.83C282.66,-585.16 313.57,-573.04 339.76,-562.76"/>
+<polygon fill="black" stroke="black" points="340.85,-566.1 348.88,-559.19 338.29,-559.58 340.85,-566.1"/>
+</g>
+<!-- select_qty -->
+<g id="node12" class="node">
+<title>select_qty</title>
+<path fill="none" stroke="black" d="M438.2,-485.2C438.2,-485.2 351.27,-485.2 351.27,-485.2 345.27,-485.2 339.27,-479.2 339.27,-473.2 339.27,-473.2 339.27,-461.2 339.27,-461.2 339.27,-455.2 345.27,-449.2 351.27,-449.2 351.27,-449.2 438.2,-449.2 438.2,-449.2 444.2,-449.2 450.2,-455.2 450.2,-461.2 450.2,-461.2 450.2,-473.2 450.2,-473.2 450.2,-479.2 444.2,-485.2 438.2,-485.2"/>
+<text xml:space="preserve" text-anchor="middle" x="394.73" y="-463" font-family="Arial" font-size="14.00">Select Quantity</text>
+</g>
+<!-- select_watch&#45;&gt;select_qty -->
+<g id="edge17" class="edge">
+<title>select_watch-&gt;select_qty</title>
+<path fill="none" stroke="black" d="M394.73,-522.01C394.73,-514.43 394.73,-505.3 394.73,-496.74"/>
+<polygon fill="black" stroke="black" points="398.23,-496.74 394.73,-486.74 391.23,-496.74 398.23,-496.74"/>
+</g>
+<!-- select_case -->
+<g id="node13" class="node">
+<title>select_case</title>
+<path fill="none" stroke="black" d="M430.48,-412.2C430.48,-412.2 362.99,-412.2 362.99,-412.2 356.99,-412.2 350.99,-406.2 350.99,-400.2 350.99,-400.2 350.99,-388.2 350.99,-388.2 350.99,-382.2 356.99,-376.2 362.99,-376.2 362.99,-376.2 430.48,-376.2 430.48,-376.2 436.48,-376.2 442.48,-382.2 442.48,-388.2 442.48,-388.2 442.48,-400.2 442.48,-400.2 442.48,-406.2 436.48,-412.2 430.48,-412.2"/>
+<text xml:space="preserve" text-anchor="middle" x="396.73" y="-390" font-family="Arial" font-size="14.00">Select Case</text>
+</g>
+<!-- select_qty&#45;&gt;select_case -->
+<g id="edge18" class="edge">
+<title>select_qty-&gt;select_case</title>
+<path fill="none" stroke="black" d="M395.22,-449.01C395.43,-441.34 395.7,-432.09 395.94,-423.44"/>
+<polygon fill="black" stroke="black" points="399.43,-423.84 396.21,-413.74 392.43,-423.64 399.43,-423.84"/>
+</g>
+<!-- select_extra -->
+<g id="node14" class="node">
+<title>select_extra</title>
+<path fill="none" stroke="black" d="M438.47,-339.2C438.47,-339.2 371,-339.2 371,-339.2 365,-339.2 359,-333.2 359,-327.2 359,-327.2 359,-315.2 359,-315.2 359,-309.2 365,-303.2 371,-303.2 371,-303.2 438.47,-303.2 438.47,-303.2 444.47,-303.2 450.47,-309.2 450.47,-315.2 450.47,-315.2 450.47,-327.2 450.47,-327.2 450.47,-333.2 444.47,-339.2 438.47,-339.2"/>
+<text xml:space="preserve" text-anchor="middle" x="404.73" y="-317" font-family="Arial" font-size="14.00">Select Extra</text>
+</g>
+<!-- select_case&#45;&gt;select_extra -->
+<g id="edge19" class="edge">
+<title>select_case-&gt;select_extra</title>
+<path fill="none" stroke="black" d="M398.67,-376.01C399.54,-368.34 400.58,-359.09 401.55,-350.44"/>
+<polygon fill="black" stroke="black" points="405,-351.06 402.65,-340.73 398.05,-350.28 405,-351.06"/>
+</g>
+<!-- calc_cost -->
+<g id="node15" class="node">
+<title>calc_cost</title>
+<path fill="none" stroke="black" d="M494.76,-266.2C494.76,-266.2 376.71,-266.2 376.71,-266.2 370.71,-266.2 364.71,-260.2 364.71,-254.2 364.71,-254.2 364.71,-236.6 364.71,-236.6 364.71,-230.6 370.71,-224.6 376.71,-224.6 376.71,-224.6 494.76,-224.6 494.76,-224.6 500.76,-224.6 506.76,-230.6 506.76,-236.6 506.76,-236.6 506.76,-254.2 506.76,-254.2 506.76,-260.2 500.76,-266.2 494.76,-266.2"/>
+<text xml:space="preserve" text-anchor="middle" x="435.73" y="-249.6" font-family="Arial" font-size="14.00">Calculate Total Cost</text>
+<text xml:space="preserve" text-anchor="middle" x="435.73" y="-232.8" font-family="Arial" font-size="14.00">(Apply offers)</text>
+</g>
+<!-- select_extra&#45;&gt;calc_cost -->
+<g id="edge20" class="edge">
+<title>select_extra-&gt;calc_cost</title>
+<path fill="none" stroke="black" d="M412.08,-302.71C415.28,-295.1 419.12,-285.94 422.77,-277.25"/>
+<polygon fill="black" stroke="black" points="426,-278.61 426.65,-268.03 419.55,-275.9 426,-278.61"/>
+</g>
+<!-- process_pay -->
+<g id="node16" class="node">
+<title>process_pay</title>
+<path fill="none" stroke="black" d="M611.59,-187.6C611.59,-187.6 509.88,-187.6 509.88,-187.6 503.88,-187.6 497.88,-181.6 497.88,-175.6 497.88,-175.6 497.88,-163.6 497.88,-163.6 497.88,-157.6 503.88,-151.6 509.88,-151.6 509.88,-151.6 611.59,-151.6 611.59,-151.6 617.59,-151.6 623.59,-157.6 623.59,-163.6 623.59,-163.6 623.59,-175.6 623.59,-175.6 623.59,-181.6 617.59,-187.6 611.59,-187.6"/>
+<text xml:space="preserve" text-anchor="middle" x="560.73" y="-165.4" font-family="Arial" font-size="14.00">Process Payment</text>
+</g>
+<!-- calc_cost&#45;&gt;process_pay -->
+<g id="edge21" class="edge">
+<title>calc_cost-&gt;process_pay</title>
+<path fill="none" stroke="black" d="M469.89,-224.23C485.81,-214.83 504.85,-203.59 521.38,-193.84"/>
+<polygon fill="black" stroke="black" points="523.15,-196.85 529.99,-188.75 519.6,-190.82 523.15,-196.85"/>
+</g>
+<!-- update_stock -->
+<g id="node17" class="node">
+<title>update_stock</title>
+<path fill="none" stroke="black" d="M826.82,-114.6C826.82,-114.6 656.65,-114.6 656.65,-114.6 650.65,-114.6 644.65,-108.6 644.65,-102.6 644.65,-102.6 644.65,-85 644.65,-85 644.65,-79 650.65,-73 656.65,-73 656.65,-73 826.82,-73 826.82,-73 832.82,-73 838.82,-79 838.82,-85 838.82,-85 838.82,-102.6 838.82,-102.6 838.82,-108.6 832.82,-114.6 826.82,-114.6"/>
+<text xml:space="preserve" text-anchor="middle" x="741.73" y="-98" font-family="Arial" font-size="14.00">Reduce Stock</text>
+<text xml:space="preserve" text-anchor="middle" x="741.73" y="-81.2" font-family="Arial" font-size="14.00">(Update user history, loyalty)</text>
+</g>
+<!-- process_pay&#45;&gt;update_stock -->
+<g id="edge22" class="edge">
+<title>process_pay-&gt;update_stock</title>
+<path fill="none" stroke="black" d="M603.63,-151.11C626.97,-141.59 656.21,-129.67 681.77,-119.25"/>
+<polygon fill="black" stroke="black" points="682.76,-122.63 690.7,-115.61 680.12,-116.14 682.76,-122.63"/>
+</g>
+<!-- complete_order -->
+<g id="node18" class="node">
+<title>complete_order</title>
+<ellipse fill="none" stroke="black" cx="817.73" cy="-18" rx="79.73" ry="18"/>
+<text xml:space="preserve" text-anchor="middle" x="817.73" y="-13.8" font-family="Arial" font-size="14.00">Complete Order</text>
+</g>
+<!-- update_stock&#45;&gt;complete_order -->
+<g id="edge23" class="edge">
+<title>update_stock-&gt;complete_order</title>
+<path fill="none" stroke="black" d="M762.5,-72.63C771.68,-63.72 782.56,-53.16 792.23,-43.77"/>
+<polygon fill="black" stroke="black" points="794.51,-46.43 799.25,-36.95 789.64,-41.41 794.51,-46.43"/>
+</g>
+<!-- complete_order&#45;&gt;main_menu -->
+<g id="edge33" class="edge">
+<title>complete_order-&gt;main_menu</title>
+<path fill="none" stroke="black" d="M850.84,-34.76C871.71,-47.24 894.73,-66.88 894.73,-92.8 894.73,-771.2 894.73,-771.2 894.73,-771.2 894.73,-811.21 773.9,-829.96 700.93,-837.63"/>
+<polygon fill="black" stroke="black" points="700.75,-834.13 691.16,-838.62 701.46,-841.1 700.75,-834.13"/>
+</g>
+<!-- buy_extras -->
+<g id="node19" class="node">
+<title>buy_extras</title>
+<path fill="none" stroke="black" d="M323.92,-1363C323.92,-1363 231.55,-1363 231.55,-1363 225.55,-1363 219.55,-1357 219.55,-1351 219.55,-1351 219.55,-1339 219.55,-1339 219.55,-1333 225.55,-1327 231.55,-1327 231.55,-1327 323.92,-1327 323.92,-1327 329.92,-1327 335.92,-1333 335.92,-1339 335.92,-1339 335.92,-1351 335.92,-1351 335.92,-1357 329.92,-1363 323.92,-1363"/>
+<text xml:space="preserve" text-anchor="middle" x="277.73" y="-1340.8" font-family="Arial" font-size="14.00">Buy Extras Only</text>
+</g>
+<!-- select_extra_only -->
+<g id="node20" class="node">
+<title>select_extra_only</title>
+<path fill="none" stroke="black" d="M346.1,-1290C346.1,-1290 209.37,-1290 209.37,-1290 203.37,-1290 197.37,-1284 197.37,-1278 197.37,-1278 197.37,-1266 197.37,-1266 197.37,-1260 203.37,-1254 209.37,-1254 209.37,-1254 346.1,-1254 346.1,-1254 352.1,-1254 358.1,-1260 358.1,-1266 358.1,-1266 358.1,-1278 358.1,-1278 358.1,-1284 352.1,-1290 346.1,-1290"/>
+<text xml:space="preserve" text-anchor="middle" x="277.73" y="-1267.8" font-family="Arial" font-size="14.00">Select Extra &amp; Quantity</text>
+</g>
+<!-- buy_extras&#45;&gt;select_extra_only -->
+<g id="edge24" class="edge">
+<title>buy_extras-&gt;select_extra_only</title>
+<path fill="none" stroke="black" d="M277.73,-1326.81C277.73,-1319.23 277.73,-1310.1 277.73,-1301.54"/>
+<polygon fill="black" stroke="black" points="281.23,-1301.54 277.73,-1291.54 274.23,-1301.54 281.23,-1301.54"/>
+</g>
+<!-- calc_cost_extra -->
+<g id="node21" class="node">
+<title>calc_cost_extra</title>
+<path fill="none" stroke="black" d="M319.25,-1217C319.25,-1217 236.21,-1217 236.21,-1217 230.21,-1217 224.21,-1211 224.21,-1205 224.21,-1205 224.21,-1193 224.21,-1193 224.21,-1187 230.21,-1181 236.21,-1181 236.21,-1181 319.25,-1181 319.25,-1181 325.25,-1181 331.25,-1187 331.25,-1193 331.25,-1193 331.25,-1205 331.25,-1205 331.25,-1211 325.25,-1217 319.25,-1217"/>
+<text xml:space="preserve" text-anchor="middle" x="277.73" y="-1194.8" font-family="Arial" font-size="14.00">Calculate Cost</text>
+</g>
+<!-- select_extra_only&#45;&gt;calc_cost_extra -->
+<g id="edge25" class="edge">
+<title>select_extra_only-&gt;calc_cost_extra</title>
+<path fill="none" stroke="black" d="M277.73,-1253.81C277.73,-1246.23 277.73,-1237.1 277.73,-1228.54"/>
+<polygon fill="black" stroke="black" points="281.23,-1228.54 277.73,-1218.54 274.23,-1228.54 281.23,-1228.54"/>
+</g>
+<!-- process_pay_extra -->
+<g id="node22" class="node">
+<title>process_pay_extra</title>
+<path fill="none" stroke="black" d="M328.59,-1130.2C328.59,-1130.2 226.88,-1130.2 226.88,-1130.2 220.88,-1130.2 214.88,-1124.2 214.88,-1118.2 214.88,-1118.2 214.88,-1106.2 214.88,-1106.2 214.88,-1100.2 220.88,-1094.2 226.88,-1094.2 226.88,-1094.2 328.59,-1094.2 328.59,-1094.2 334.59,-1094.2 340.59,-1100.2 340.59,-1106.2 340.59,-1106.2 340.59,-1118.2 340.59,-1118.2 340.59,-1124.2 334.59,-1130.2 328.59,-1130.2"/>
+<text xml:space="preserve" text-anchor="middle" x="277.73" y="-1108" font-family="Arial" font-size="14.00">Process Payment</text>
+</g>
+<!-- calc_cost_extra&#45;&gt;process_pay_extra -->
+<g id="edge26" class="edge">
+<title>calc_cost_extra-&gt;process_pay_extra</title>
+<path fill="none" stroke="black" d="M277.73,-1180.84C277.73,-1169.65 277.73,-1154.77 277.73,-1141.82"/>
+<polygon fill="black" stroke="black" points="281.23,-1142.14 277.73,-1132.14 274.23,-1142.14 281.23,-1142.14"/>
+</g>
+<!-- update_stock_extra -->
+<g id="node23" class="node">
+<title>update_stock_extra</title>
+<path fill="none" stroke="black" d="M339.09,-1033.6C339.09,-1033.6 216.38,-1033.6 216.38,-1033.6 210.38,-1033.6 204.38,-1027.6 204.38,-1021.6 204.38,-1021.6 204.38,-1004 204.38,-1004 204.38,-998 210.38,-992 216.38,-992 216.38,-992 339.09,-992 339.09,-992 345.09,-992 351.09,-998 351.09,-1004 351.09,-1004 351.09,-1021.6 351.09,-1021.6 351.09,-1027.6 345.09,-1033.6 339.09,-1033.6"/>
+<text xml:space="preserve" text-anchor="middle" x="277.73" y="-1017" font-family="Arial" font-size="14.00">Reduce Stock</text>
+<text xml:space="preserve" text-anchor="middle" x="277.73" y="-1000.2" font-family="Arial" font-size="14.00">(Update user history)</text>
+</g>
+<!-- process_pay_extra&#45;&gt;update_stock_extra -->
+<g id="edge27" class="edge">
+<title>process_pay_extra-&gt;update_stock_extra</title>
+<path fill="none" stroke="black" d="M277.73,-1093.79C277.73,-1080.31 277.73,-1061.3 277.73,-1045.19"/>
+<polygon fill="black" stroke="black" points="281.23,-1045.61 277.73,-1035.61 274.23,-1045.61 281.23,-1045.61"/>
+</g>
+<!-- complete_extra -->
+<g id="node24" class="node">
+<title>complete_extra</title>
+<ellipse fill="none" stroke="black" cx="277.73" cy="-916.2" rx="81.35" ry="18"/>
+<text xml:space="preserve" text-anchor="middle" x="277.73" y="-912" font-family="Arial" font-size="14.00">Dispense Extras</text>
+</g>
+<!-- update_stock_extra&#45;&gt;complete_extra -->
+<g id="edge28" class="edge">
+<title>update_stock_extra-&gt;complete_extra</title>
+<path fill="none" stroke="black" d="M277.73,-991.74C277.73,-978.39 277.73,-960.64 277.73,-945.81"/>
+<polygon fill="black" stroke="black" points="281.23,-946.2 277.73,-936.2 274.23,-946.2 281.23,-946.2"/>
+</g>
+<!-- complete_extra&#45;&gt;main_menu -->
+<g id="edge34" class="edge">
+<title>complete_extra-&gt;main_menu</title>
+<path fill="none" stroke="black" d="M337.43,-903.71C408.15,-890.11 524.92,-867.64 592.95,-854.55"/>
+<polygon fill="black" stroke="black" points="593.19,-858.07 602.35,-852.74 591.87,-851.19 593.19,-858.07"/>
+</g>
+<!-- show_offer&#45;&gt;main_menu -->
+<g id="edge35" class="edge">
+<title>show_offer-&gt;main_menu</title>
+<path fill="none" stroke="black" d="M559.44,-631.58C566.93,-636.44 574.2,-642.32 579.73,-649.2 619.49,-698.66 636.4,-773.26 642.98,-813.69"/>
+<polygon fill="black" stroke="black" points="639.49,-813.99 644.45,-823.35 646.41,-812.94 639.49,-813.99"/>
+</g>
+<!-- view_history&#45;&gt;main_menu -->
+<g id="edge36" class="edge">
+<title>view_history-&gt;main_menu</title>
+<path fill="none" stroke="black" d="M99.36,-631.68C163.6,-665.54 311.64,-740.92 442.73,-788.2 492.61,-806.19 551.3,-821.1 592.89,-830.66"/>
+<polygon fill="black" stroke="black" points="591.87,-834.02 602.4,-832.82 593.42,-827.19 591.87,-834.02"/>
+</g>
+<!-- redeem_points&#45;&gt;main_menu -->
+<g id="edge37" class="edge">
+<title>redeem_points-&gt;main_menu</title>
+<path fill="none" stroke="black" d="M664.29,-631.54C661.03,-670.6 653.1,-765.81 649.11,-813.7"/>
+<polygon fill="black" stroke="black" points="645.63,-813.3 648.29,-823.55 652.61,-813.88 645.63,-813.3"/>
+</g>
+</g>
+</svg>
