@@ -1,0 +1,941 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <limits>
+#include <thread>
+#include <chrono>
+#include <cctype>
+#include <map>
+#include <numeric>
+#include <fstream>
+#include <iomanip>
+
+using namespace std;
+
+//  Data Structure 
+
+//Struct representing a single item within an order
+struct OrderItem {
+    string name;            // Name of the item
+    int quantity;           // Quantity of the item
+    int price_per_item;     // Price of a single unit of the item
+};
+
+//Struct representing a completed order by a user
+struct UserOrder {
+    vector<OrderItem> items; //List of items in the order
+    int total_cost;          //Total cost of the order
+};
+
+// Struct representing user account with their details and history
+struct User {
+    string username;
+    string password;
+    int loyalty_points = 0;
+    vector<UserOrder> order_history;
+};
+
+// Struct holding product data for watches, cases, and extras
+struct Product {
+    string name;
+    int price; // Price in pounds
+    int stock; // Current number of units in stock
+
+    Product(string n, int p, int s) : name(n), price(p), stock(s) {}
+
+    //Checking if there is enough stock for a given quantity
+    bool is_available(int qty) const {
+        return stock >= qty;
+    }
+
+    //Reducing the stock after a purchase
+    void reduce_stock(int qty) {
+        if (qty <= stock) stock -= qty;
+    }
+};
+
+//Struct holding details for a single customer order of a wristwatch.
+struct Order {
+    Product* watch = nullptr;      // Pointer to the selected watch product
+    Product* case_type = nullptr;  // Pointer to the selected case product
+    Product* extra = nullptr;      // Pointer to the selected extra item
+    int quantity = 0;              // Quantity of watches to be purchased
+    int total_cost = 0;            // Total cost of the entire order
+
+    //Calculate the total cost based on selected items and quantity
+    void calculate_total() {
+        total_cost = (watch->price * quantity) + case_type->price + (extra ? extra->price : 0);
+    }
+};
+
+// VendingMachine Class
+// This class encapsulates all the logic for the vending machine, including
+// product management, user management, and the purchasing process.
+class VendingMachine {
+private:
+    // Maps storing products, using product name as the key
+    map<string, Product> watches;
+    map<string, Product> cases;
+    map<string, Product> extras;
+
+    int total_production_time = 0;
+    // Constants for pricing and thresholds
+    const int SMARTWATCH_OFFER_PRICE = 135;
+    const int FREE_SHIPPING_THRESHOLD = 200;
+    const int LOW_STOCK_THRESHOLD = 5;
+
+    // User account data and current user pointer
+    vector<User> all_users;
+    User* current_user = nullptr;
+
+public:
+    // Constructor to initialize the vending machine with products and load user data
+    VendingMachine() {
+        // Initializing watches with name, price, and initial stock
+        watches.emplace("Analog Watch", Product("Analog Watch", 50, 10));
+        watches.emplace("Digital Watch", Product("Digital Watch", 40, 10));
+        watches.emplace("Smartwatch", Product("Smartwatch", 150, 5));
+
+        // Initializing cases
+        cases.emplace("Steel Case", Product("Steel Case", 20, 15));
+        cases.emplace("Gold-plated Case", Product("Gold-plated Case", 40, 8));
+
+        // Initializing extras, including a 'No extras' option
+        extras.emplace("No extras", Product("No extras", 0, 9999));
+        extras.emplace("Spare leather strap", Product("Spare leather strap", 10, 20));
+        extras.emplace("Metal bracelet strap", Product("Metal bracelet strap", 15, 15));
+
+        load_users();
+    }
+
+    //Save user data when the program exits
+    ~VendingMachine() {
+        save_users();
+    }
+
+    // Main control loop for the vending machine program
+    void run() {
+        cout << "Welcome to the Wristwatch Vending Machine! 👋\n";
+        
+        // Initialization menu for user login or registration
+        cout << "\n[l] Login, [r] Register, or [g] Continue as Guest?\n";
+        char choice;
+        cin >> choice;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        
+        if (tolower(choice) == 'l') {
+            login();
+        } else if (tolower(choice) == 'r') {
+            register_user();
+        } else {
+            cout << "Continuing as guest. You will not have access to loyalty points or order history.\n";
+        }
+        
+        // Main program loop
+        bool keep_running = true;
+        while (keep_running) {
+            display_main_menu();
+            string input;
+            cout << "Choose an option: ";
+            cin >> input;
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+            // Admin login shortcut
+            if (input == "admin123") {
+                admin_login();
+                continue;
+            }
+
+            try {
+                int main_choice = stoi(input);
+                switch (main_choice) {
+                    case 1:
+                        buy_watches_process();
+                        break;
+                    case 2:
+                        buy_extras_only();
+                        break;
+                    case 3:
+                        show_offer();
+                        break;
+                    case 4:
+                        if (current_user) {
+                            view_order_history();
+                        } else {
+                            cout << "Please login to view your order history.\n";
+                        }
+                        break;
+                    case 5:
+                        if (current_user) {
+                            redeem_loyalty_points();
+                        } else {
+                            cout << "Please login to redeem loyalty points.\n";
+                        }
+                        break;
+                    case 6:
+                        keep_running = false;
+                        cout << "Thank you for visiting! Goodbye. 👋\n";
+                        break;
+                    default:
+                        cout << "Invalid option. Please choose a number from the menu.\n";
+                }
+            } catch (const invalid_argument& ia) {
+                cout << "Invalid input. Please choose a number from the menu.\n";
+            }
+        }
+    }
+
+private:
+    // Displays the main menu options for the user
+    void display_main_menu() {
+        cout << "\nMain Menu:\n";
+        cout << "1. Buy a wristwatch\n";
+        cout << "2. Buy extras\n";
+        cout << "3. Watch Our Offer\n";
+        cout << "4. View Order History\n";
+        cout << "5. Redeem Loyalty Points\n";
+        cout << "6. Exit\n";
+    }
+
+    //  User Management 
+
+    // Loads user data from a file named "users.txt"
+    void load_users() {
+        ifstream file("users.txt");
+        if (!file.is_open()) return; // File not found, do nothing
+
+        string username, password;
+        int loyalty_points;
+        while (file >> username >> password >> loyalty_points) {
+            User user;
+            user.username = username;
+            user.password = password;
+            user.loyalty_points = loyalty_points;
+            
+            // Assuming a simple order history format for demonstration
+            int order_count;
+            file >> order_count;
+            for (int i = 0; i < order_count; ++i) {
+                int item_count;
+                file >> item_count;
+                UserOrder order;
+                for (int j = 0; j < item_count; ++j) {
+                    string item_name;
+                    int quantity, price;
+                    file >> item_name >> quantity >> price;
+                    order.items.push_back({item_name, quantity, price});
+                }
+                file >> order.total_cost;
+                user.order_history.push_back(order);
+            }
+            all_users.push_back(user);
+        }
+        file.close();
+    }
+
+    // Save user data to a file named "users.txt"
+    void save_users() {
+        ofstream file("users.txt");
+        if (!file.is_open()) return;
+        for (const auto& user : all_users) {
+            file << user.username << " " << user.password << " " << user.loyalty_points << " ";
+            file << user.order_history.size() << " ";
+            for (const auto& order : user.order_history) {
+                file << order.items.size() << " ";
+                for (const auto& item : order.items) {
+                    file << item.name << " " << item.quantity << " " << item.price_per_item << " ";
+                }
+                file << order.total_cost << " ";
+            }
+            file << "\n";
+        }
+        file.close();
+    }
+
+    // Handle user login process
+    void login() {
+        string username, password;
+        cout << "Enter username: ";
+        cin >> username;
+        cout << "Enter password: ";
+        cin >> password;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+        for (auto& user : all_users) {
+            if (user.username == username && user.password == password) {
+                current_user = &user;
+                cout << "Login successful. Welcome back, " << current_user->username << "!\n";
+                return;
+            }
+        }
+        cout << "Invalid username or password. Continuing as guest.\n";
+    }
+
+    // Handle new user registration
+    void register_user() {
+        string username, password;
+        cout << "Enter new username: ";
+        cin >> username;
+        cout << "Enter new password: ";
+        cin >> password;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+        for (const auto& user : all_users) {
+            if (user.username == username) {
+                cout << "Username already exists. Please choose a different one.\n";
+                return;
+            }
+        }
+        all_users.push_back({username, password});
+        cout << "Registration successful!\n";
+        
+        if (confirm_choice("Would you like to log in now? (y/n): ")) {
+            current_user = &all_users.back();
+            cout << "Login successful. Welcome, " << current_user->username << "!\n";
+        }
+    }
+
+    // Display the current user's order history
+    void view_order_history() {
+        if (!current_user) return;
+        cout << "\n--- " << current_user->username << "'s Order History ---\n";
+        if (current_user->order_history.empty()) {
+            cout << "No past orders found.\n";
+            return;
+        }
+
+        int order_num = 1;
+        for (const auto& order : current_user->order_history) {
+            cout << "\nOrder #" << order_num++ << " - Total Cost: £" << order.total_cost << "\n";
+            for (const auto& item : order.items) {
+                cout << "  - " << item.quantity << " x " << item.name << " (at £" << item.price_per_item << " each)\n";
+            }
+        }
+    }
+    
+    // Allows logged-in users to redeem loyalty points for a discount
+    void redeem_loyalty_points() {
+        if (!current_user) return;
+        cout << "\n--- Loyalty Points ---\n";
+        cout << "You currently have " << current_user->loyalty_points << " loyalty points.\n";
+        if (current_user->loyalty_points < 100) {
+            cout << "You need at least 100 points to redeem a reward. Keep shopping!\n";
+            return;
+        }
+        
+        cout << "Redeem 100 points for a £10 discount? (y/n): ";
+        char choice;
+        cin >> choice;
+        if (tolower(choice) == 'y') {
+            current_user->loyalty_points -= 100;
+            cout << "Points redeemed! A £10 discount has been applied to your next purchase.\n";
+        }
+    }
+
+    //  Core Vending Logic 
+
+    // Guides the user through the process of buying a wristwatch
+    void buy_watches_process() {
+        Order order;
+        // Step-by-step selection process
+        if (!select_watch(order)) return;
+        if (!select_quantity(order)) return;
+        if (!select_case(order)) return;
+        if (!select_extra(order)) return;
+
+        // Apply special offer for Smartwatches
+        if (order.watch->name == "Smartwatch") {
+            order.watch->price = SMARTWATCH_OFFER_PRICE;
+        }
+
+        order.calculate_total();
+
+        // Apply special offer for Analog watches
+        if (order.watch->name == "Analog Watch" && order.quantity >= 2 && order.extra->name == "No extras") {
+            cout << "You qualify for a FREE Spare leather strap! Adding it to your order. 🎉\n";
+            order.extra = &extras.at("Spare leather strap");
+            order.extra->price = 0;
+            order.calculate_total();
+        }
+
+        // Check for stock availability and handle issues
+        if (!check_stock(order)) {
+            if (!handle_stock_issue(order)) {
+                cout << "Order cancelled. ❌\n";
+            }
+            return;
+        }
+        
+        // Process payment and dispense change
+        int paid = process_payment(order);
+        give_change(paid, order.total_cost);
+
+        // Reduce stock for all items in the order
+        order.watch->reduce_stock(order.quantity);
+        if (order.case_type) {
+            order.case_type->reduce_stock(1);
+        }
+        if (order.extra && order.extra->name != "No extras") {
+            order.extra->reduce_stock(1);
+        }
+
+        // Update user's order history and loyalty points if logged in
+        if (current_user) {
+            UserOrder new_order;
+            new_order.items.push_back({order.watch->name, order.quantity, order.watch->price});
+            if (order.case_type) new_order.items.push_back({order.case_type->name, 1, order.case_type->price});
+            if (order.extra && order.extra->name != "No extras") new_order.items.push_back({order.extra->name, 1, order.extra->price});
+            new_order.total_cost = order.total_cost;
+            current_user->order_history.push_back(new_order);
+            current_user->loyalty_points += (order.total_cost / 10);
+            cout << "You've earned " << (order.total_cost / 10) << " loyalty points!\n";
+        }
+        
+        // Check if any items are low on stock after the purchase
+        check_low_stock();
+
+        // Handle delivery choice if the order qualifies
+        if (order.total_cost > FREE_SHIPPING_THRESHOLD && handle_delivery_choice()) {
+            cout << "\nYour order is being processed. Thank you for choosing delivery service. 📦\n";
+            return;
+        }
+        
+        // Display a summary of the dispensed order
+        cout << "\nYour order has been dispensed: " << order.quantity << " x " << order.watch->name;
+        if (order.case_type) {
+            cout << " with " << order.case_type->name;
+        }
+        if (order.extra && order.extra->name != "No extras")
+            cout << " + " << order.extra->name;
+        cout << endl;
+
+        // Entertain and simulate production time
+        entertain(order.quantity);
+        simulate_production(order.quantity);
+        
+        cout << "Please collect your watch(es). ⌚️\n";
+    }
+    
+    // Handles the process of buying only extra items
+    void buy_extras_only() {
+        cout << "\nAvailable extras:\n";
+        int i = 1;
+        vector<Product*> purchasable_extras;
+        for (auto& pair : extras) {
+            if (pair.first == "No extras") continue;
+            cout << i++ << ". " << pair.second.name << " (£" << pair.second.price << "), Stock: " << pair.second.stock << endl;
+            purchasable_extras.push_back(&pair.second); 
+        }
+
+        int choice = get_user_input_int(1, purchasable_extras.size(), "Select extra by number: ");
+        Product* extra = purchasable_extras[choice - 1];
+
+        if (extra->stock == 0) {
+            cout << "Sorry, this extras is out of stock. 😕\n";
+            return;
+        }
+
+        cout << "Enter quantity to buy (Available: " << extra->stock << "): ";
+        int qty = get_user_input_int(1, extra->stock, "");
+        int total_cost = qty * extra->price;
+        cout << "Total cost: £" << total_cost << endl;
+
+        int paid = process_payment_simple(total_cost);
+        give_change(paid, total_cost);
+
+        extra->reduce_stock(qty);
+        cout << "Extras dispensed: " << qty << " x " << extra->name << endl;
+        
+        // Update user's history and loyalty points
+        if (current_user) {
+            UserOrder new_order;
+            new_order.items.push_back({extra->name, qty, extra->price});
+            new_order.total_cost = total_cost;
+            current_user->order_history.push_back(new_order);
+            current_user->loyalty_points += (total_cost / 10);
+            cout << "You've earned " << (total_cost / 10) << " loyalty points!\n";
+        }
+        
+        check_low_stock();
+
+        // Custom messages for different extras
+        if (extra->name.find("bracelet") != string::npos) {
+            cout << "Please collect your bracelet. 🔗\n";
+        } else if (extra->name.find("strap") != string::npos) {
+            cout << "Please collect your strap. ⛓️\n";
+        } else {
+            cout << "Please collect your item(s). ✨\n";
+        }
+    }
+
+    // Checks for and alerts the user about low stock items
+    void check_low_stock() {
+        for (auto& pair : watches) {
+            if (pair.second.stock <= LOW_STOCK_THRESHOLD) {
+                cout << "\n[ALERT] " << pair.first << " is low on stock! (" << pair.second.stock << " left)\n";
+            }
+        }
+        for (auto& pair : cases) {
+            if (pair.second.stock <= LOW_STOCK_THRESHOLD) {
+                cout << "\n[ALERT] " << pair.first << " is low on stock! (" << pair.second.stock << " left)\n";
+            }
+        }
+        for (auto& pair : extras) {
+            if (pair.first != "No extras" && pair.second.stock <= LOW_STOCK_THRESHOLD) {
+                cout << "\n[ALERT] " << pair.first << " is low on stock! (" << pair.second.stock << " left)\n";
+            }
+        }
+    }
+
+    //  Admin menu 
+
+    // Handles the admin login process
+    void admin_login() {
+        string password;
+        cout << "\nEnter admin password: ";
+        cin >> password;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        if (password == "admin123") {
+            cout << "Login successful. Welcome, Admin.\n";
+            admin_menu();
+        } else {
+            cout << "Incorrect password. Returning to main menu.\n";
+        }
+    }
+
+    // Displays and handles the admin menu options
+    void admin_menu() {
+        while (true) {
+            cout << "\nAdmin Menu:\n";
+            cout << "1. View all stock\n";
+            cout << "2. Restock item\n";
+            cout << "3. Change item price\n";
+            cout << "4. Place supplier order\n";
+            cout << "5. Logout\n";
+            int choice = get_user_input_int(1, 5, "Choose an option: ");
+            switch (choice) {
+                case 1:
+                    view_all_stock();
+                    break;
+                case 2:
+                    restock_item();
+                    break;
+                case 3:
+                    change_item_price();
+                    break;
+                case 4:
+                    place_supplier_order();
+                    break;
+                case 5:
+                    cout << "Logging out. Goodbye, Admin.\n";
+                    return;
+            }
+        }
+    }
+    
+    // Displays the current stock levels for all products
+    void view_all_stock() {
+        cout << "\n--- Current Stock Levels ---\n";
+        cout << "Watches:\n";
+        for (const auto& pair : watches) {
+            cout << "- " << pair.second.name << ": " << pair.second.stock << endl;
+        }
+        cout << "Cases:\n";
+        for (const auto& pair : cases) {
+            cout << "- " << pair.second.name << ": " << pair.second.stock << endl;
+        }
+        cout << "Extras:\n";
+        for (const auto& pair : extras) {
+            cout << "- " << pair.second.name << ": " << pair.second.stock << endl;
+        }
+        cout << "----------------------------\n";
+    }
+
+    // Allows the admin to manually restock a selected item
+    void restock_item() {
+        cout << "\n--- Restock Menu ---\n";
+        cout << "1. Watch\n";
+        cout << "2. Case\n";
+        cout << "3. Extra\n";
+        int category_choice = get_user_input_int(1, 3, "Select item category: ");
+        int item_choice;
+        int qty_to_add;
+        if (category_choice == 1) {
+            cout << "Watches:\n";
+            int i = 1;
+            for (const auto& pair : watches) cout << i++ << ". " << pair.second.name << endl;
+            item_choice = get_user_input_int(1, watches.size(), "Select watch to restock: ");
+            auto it = watches.begin();
+            advance(it, item_choice - 1);
+            cout << "Enter quantity to add for " << it->second.name << ": ";
+            qty_to_add = get_user_input_int(1, 1000, "");
+            it->second.stock += qty_to_add;
+            cout << "Restocked " << it->second.name << ". New stock: " << it->second.stock << endl;
+        } else if (category_choice == 2) {
+            cout << "Cases:\n";
+            int i = 1;
+            for (const auto& pair : cases) cout << i++ << ". " << pair.second.name << endl;
+            item_choice = get_user_input_int(1, cases.size(), "Select case to restock: ");
+            auto it = cases.begin();
+            advance(it, item_choice - 1);
+            cout << "Enter quantity to add for " << it->second.name << ": ";
+            qty_to_add = get_user_input_int(1, 1000, "");
+            it->second.stock += qty_to_add;
+            cout << "Restocked " << it->second.name << ". New stock: " << it->second.stock << endl;
+        } else {
+            cout << "Extras:\n";
+            int i = 1;
+            for (const auto& pair : extras) cout << i++ << ". " << pair.second.name << endl;
+            item_choice = get_user_input_int(1, extras.size(), "Select extra to restock: ");
+            auto it = extras.begin();
+            advance(it, item_choice - 1);
+            cout << "Enter quantity to add for " << it->second.name << ": ";
+            qty_to_add = get_user_input_int(1, 1000, "");
+            it->second.stock += qty_to_add;
+            cout << "Restocked " << it->second.name << ". New stock: " << it->second.stock << endl;
+        }
+    }
+
+    // Allows the admin to change the price of a selected item
+    void change_item_price() {
+        cout << "\n--- Change Price Menu ---\n";
+        cout << "1. Watch\n";
+        cout << "2. Case\n";
+        cout << "3. Extra\n";
+        int category_choice = get_user_input_int(1, 3, "Select item category: ");
+        int item_choice;
+        int new_price;
+        if (category_choice == 1) {
+            cout << "Watches:\n";
+            int i = 1;
+            for (const auto& pair : watches) cout << i++ << ". " << pair.second.name << " (£" << pair.second.price << ")\n";
+            item_choice = get_user_input_int(1, watches.size(), "Select watch to change price: ");
+            auto it = watches.begin();
+            advance(it, item_choice - 1);
+            cout << "Enter new price for " << it->second.name << " (current: £" << it->second.price << "): ";
+            new_price = get_user_input_int(0, 1000, "");
+            it->second.price = new_price;
+            cout << "Price of " << it->second.name << " changed to £" << it->second.price << endl;
+        } else if (category_choice == 2) {
+            cout << "Cases:\n";
+            int i = 1;
+            for (const auto& pair : cases) cout << i++ << ". " << pair.second.name << " (£" << pair.second.price << ")\n";
+            item_choice = get_user_input_int(1, cases.size(), "Select case to change price: ");
+            auto it = cases.begin();
+            advance(it, item_choice - 1);
+            cout << "Enter new price for " << it->second.name << " (current: £" << it->second.price << "): ";
+            new_price = get_user_input_int(0, 1000, "");
+            it->second.price = new_price;
+            cout << "Price of " << it->second.name << " changed to £" << it->second.price << endl;
+        } else {
+            cout << "Extras:\n";
+            int i = 1;
+            for (const auto& pair : extras) cout << i++ << ". " << pair.second.name << " (£" << pair.second.price << ")\n";
+            item_choice = get_user_input_int(1, extras.size(), "Select extra to change price: ");
+            auto it = extras.begin();
+            advance(it, item_choice - 1);
+            cout << "Enter new price for " << it->second.name << " (current: £" << it->second.price << "): ";
+            new_price = get_user_input_int(0, 1000, "");
+            it->second.price = new_price;
+            cout << "Price of " << it->second.name << " changed to £" << it->second.price << endl;
+        }
+    }
+    
+    // Simulates placing a supplier order for a selected item
+    void place_supplier_order() {
+        cout << "\n--- Supplier Ordering ---\n";
+        cout << "1. Watch\n";
+        cout << "2. Case\n";
+        cout << "3. Extra\n";
+        int category_choice = get_user_input_int(1, 3, "Select item category: ");
+        map<string, Product>* item_category_ptr;
+        string item_name;
+        // Select the specific item based on category
+        if (category_choice == 1) {
+            item_category_ptr = &watches;
+            int i = 1;
+            for (const auto& pair : watches) cout << i++ << ". " << pair.second.name << endl;
+            int item_choice = get_user_input_int(1, watches.size(), "Select watch to order: ");
+            auto it = watches.begin();
+            advance(it, item_choice - 1);
+            item_name = it->second.name;
+        } else if (category_choice == 2) {
+            item_category_ptr = &cases;
+            int i = 1;
+            for (const auto& pair : cases) cout << i++ << ". " << pair.second.name << endl;
+            int item_choice = get_user_input_int(1, cases.size(), "Select case to order: ");
+            auto it = cases.begin();
+            advance(it, item_choice - 1);
+            item_name = it->second.name;
+        } else {
+            item_category_ptr = &extras;
+            int i = 1;
+            for (const auto& pair : extras) cout << i++ << ". " << pair.second.name << endl;
+            int item_choice = get_user_input_int(1, extras.size(), "Select extra to order: ");
+            auto it = extras.begin();
+            advance(it, item_choice - 1);
+            item_name = it->second.name;
+        }
+        cout << "How many units of " << item_name << " do you want to order from the supplier?: ";
+        int qty_to_add = get_user_input_int(1, 1000, "");
+        cout << "Placing order for " << qty_to_add << " units of " << item_name << ".\n";
+        cout << "Simulating shipping time. Please wait...\n";
+        this_thread::sleep_for(chrono::seconds(5));
+        // Update the stock with the new units
+        item_category_ptr->at(item_name).stock += qty_to_add;
+        cout << "Order received! Stock of " << item_name << " updated. New stock: " << item_category_ptr->at(item_name).stock << endl;
+    }
+    
+    //Helper Functions
+
+    // Displays the available watches and handles user selection
+    bool select_watch(Order& order) {
+        cout << "\nAvailable watches:\n";
+        int i = 1;
+        vector<Product*> purchasable_watches;
+        for (auto& pair : watches) {
+            if (pair.second.stock > 0) {
+                cout << i++ << ". " << pair.second.name << " (£" << pair.second.price << "), Stock: " << pair.second.stock << endl;
+                purchasable_watches.push_back(&pair.second);
+            }
+        }
+        if (purchasable_watches.empty()) {
+            cout << "Sorry, all watches are currently out of stock. 😕\n";
+            return false;
+        }
+        int choice = get_user_input_int(1, purchasable_watches.size(), "Select watch by number: ");
+        order.watch = purchasable_watches[choice - 1];
+        return true;
+    }
+
+    // Handles the user's choice for the quantity of watches
+    bool select_quantity(Order& order) {
+        cout << "Enter quantity to buy (Available: " << order.watch->stock << "): ";
+        order.quantity = get_user_input_int(1, order.watch->stock, "");
+        return true;
+    }
+
+    // Displays available cases and handles user selection
+    bool select_case(Order& order) {
+        cout << "\nAvailable cases:\n";
+        int i = 1;
+        vector<Product*> purchasable_cases;
+        for (auto& pair : cases) {
+            if (pair.second.stock > 0) {
+                cout << i++ << ". " << pair.second.name << " (£" << pair.second.price << "), Stock: " << pair.second.stock << endl;
+                purchasable_cases.push_back(&pair.second);
+            }
+        }
+        if (purchasable_cases.empty()) {
+            cout << "Sorry, all cases are currently out of stock. 😕\n";
+            return false;
+        }
+        int choice = get_user_input_int(1, purchasable_cases.size(), "Select case by number: ");
+        order.case_type = purchasable_cases[choice - 1];
+        return true;
+    }
+    
+    // Displays available extras and handles user selection
+    bool select_extra(Order& order) {
+        cout << "\nAvailable extras:\n";
+        int i = 1;
+        vector<Product*> purchasable_extras;
+        for (auto& pair : extras) {
+            if (pair.second.stock > 0) {
+                cout << i++ << ". " << pair.second.name << " (£" << pair.second.price << "), Stock: " << pair.second.stock << endl;
+                purchasable_extras.push_back(&pair.second);
+            }
+        }
+        if (purchasable_extras.empty()) {
+            cout << "Sorry, all extras are currently out of stock. 😕\n";
+            return false;
+        }
+        int choice = get_user_input_int(1, purchasable_extras.size(), "Select extra by number: ");
+        order.extra = purchasable_extras[choice - 1];
+        return true;
+    }
+    
+    // Checks if the chosen items are in stock
+    bool check_stock(const Order& order) {
+        if (!order.watch->is_available(order.quantity)) {
+            cout << "Sorry, " << order.watch->name << " is out of stock. 😕\n";
+            return false;
+        }
+        if (order.case_type && !order.case_type->is_available(1)) {
+            cout << "Sorry, the selected case is out of stock. 😕\n";
+            return false;
+        }
+        if (order.extra && order.extra->name != "No extras" && !order.extra->is_available(1)) {
+            cout << "Sorry, the selected extra is out of stock. 😕\n";
+            return false;
+        }
+        return true;
+    }
+
+    // Handles stock issues by offering alternatives or cancelling the order
+    bool handle_stock_issue(Order& order) {
+        cout << "\nAn issue was found with your order. There is insufficient stock.\n";
+        cout << "Would you like to:\n";
+        cout << "1. Modify your order\n";
+        cout << "2. Cancel the order\n";
+        int choice = get_user_input_int(1, 2, "Choose an option: ");
+        
+        if (choice == 1) {
+            cout << "Returning to watch selection...\n";
+            if (!select_watch(order)) return false;
+            if (!select_quantity(order)) return false;
+            if (!select_case(order)) return false;
+            if (!select_extra(order)) return false;
+            return true;
+        } else {
+            return false; // Cancel the order
+        }
+    }
+
+    // Guides the user through the payment process for a wristwatch order
+    int process_payment(const Order& order) {
+        cout << "\n--- Your Order Summary ---\n";
+        cout << "Item: " << order.quantity << " x " << order.watch->name << " (£" << order.watch->price << " each)\n";
+        if (order.case_type) cout << "Case: " << order.case_type->name << " (£" << order.case_type->price << ")\n";
+        if (order.extra && order.extra->name != "No extras") cout << "Extra: " << order.extra->name << " (£" << order.extra->price << ")\n";
+        cout << "Total cost: £" << order.total_cost << "\n";
+        
+        int paid = 0;
+        int remaining_cost = order.total_cost;
+        while (paid < order.total_cost) {
+            cout << "Insert money (or 0 for card payment): £";
+            int inserted = get_user_input_int(0, 1000, "");
+            if (inserted == 0) {
+                cout << "Card payment accepted. 💳\n";
+                paid = order.total_cost;
+                break;
+            }
+            paid += inserted;
+            remaining_cost = order.total_cost - paid;
+            if (remaining_cost > 0) {
+                cout << "Insufficient payment. £" << remaining_cost << " remaining.\n";
+            }
+        }
+        return paid;
+    }
+
+    // Handles a simple payment process for extras only
+    int process_payment_simple(int total_cost) {
+        cout << "\nTotal cost: £" << total_cost << endl;
+        int paid = 0;
+        while (paid < total_cost) {
+            cout << "Insert money (or 0 for card payment): £";
+            int inserted = get_user_input_int(0, 1000, "");
+            if (inserted == 0) {
+                cout << "Card payment accepted. 💳\n";
+                paid = total_cost;
+                break;
+            }
+            paid += inserted;
+            if (paid < total_cost) {
+                cout << "Insufficient payment. £" << (total_cost - paid) << " remaining.\n";
+            }
+        }
+        return paid;
+    }
+
+    // Calculates and displays the change to be returned to the user
+    void give_change(int paid, int total_cost) {
+        if (paid > total_cost) {
+            cout << "Change returned: £" << (paid - total_cost) << endl;
+        }
+    }
+
+    // Provides entertainment options while the user waits
+    void entertain(int quantity) {
+        cout << "\nWhile your watches are being made, you can:\n";
+        cout << "1. Watch YouTube\n";
+        cout << "2. Play a simple game\n";
+        cout << "3. Do nothing\n";
+        int choice = get_user_input_int(1, 3, "Choose an option: ");
+        if (choice == 1) {
+            cout << "Enjoy your video! 📺\n";
+        } else if (choice == 2) {
+            cout << "You played a game and won! 🎉\n";
+        } else {
+            cout << "Thanks for your patience.\n";
+        }
+    }
+
+    // Simulates the production and preparation time for the order
+    void simulate_production(int quantity) {
+        total_production_time = 5 * quantity;
+        cout << "Simulating production and dispensing process. This will take " << total_production_time << " seconds. ⚙️\n";
+        this_thread::sleep_for(chrono::seconds(total_production_time));
+        cout << "Production complete!\n";
+    }
+
+    // Handles the delivery choice if the order total is above the free shipping threshold
+    bool handle_delivery_choice() {
+        cout << "Your order qualifies for free delivery! Would you like to use this service? (y/n): ";
+        char choice;
+        cin >> choice;
+        return tolower(choice) == 'y';
+    }
+
+    // Displays a special promotional offer to the user
+    void show_offer() {
+        cout << "\n--- Special Offers! ---\n";
+        cout << "✨ Buy 2 or more Analog Watches and get a Spare Leather Strap FREE! (Offer valid with no other extras)\n";
+        cout << "💰 Smartwatch discounted to £" << SMARTWATCH_OFFER_PRICE << " (limited time)! If you are a student, you get an additional 5% off!\n";
+        cout << "📦 Free shipping on orders over £" << FREE_SHIPPING_THRESHOLD << "!\n";
+    }
+
+    // A helper function to get validated integer input from the user
+    int get_user_input_int(int min, int max, const string& prompt) {
+        int input;
+        while (true) {
+            if (!prompt.empty()) cout << prompt;
+            if (!(cin >> input)) {
+                cout << "Invalid input. Please enter a number.\n";
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                continue;
+            }
+            if (input < min || input > max) {
+                cout << "Please enter a number between " << min << " and " << max << ".\n";
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                continue;
+            }
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            return input;
+        }
+    }
+
+    // A helper function to get a yes/no confirmation from the user
+    bool confirm_choice(const string& message) {
+        cout << message;
+        char choice;
+        while (true) {
+            cin >> choice;
+            choice = tolower(choice);
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            if (choice == 'y') return true;
+            else if (choice == 'n') return false;
+            else cout << "Invalid input. Please enter 'y' or 'n'.\n";
+        }
+    }
+    
+    // Checks and handles a user's choice for a delivery service. 
+    // This is currently a stub and needs to be implemented.
+    // It's a good candidate for adding more logic later.
+    bool choose_delivery() {
+        cout << "Do you want to choose delivery? (d) for delivery, (p) for pickup: ";
+        char choice;
+        cin >> choice;
+        choice = tolower(choice);
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        return choice == 'd';
+    }
+};
+
+int main() {
+    VendingMachine machine;
+    machine.run();
+    return 0;
+}
